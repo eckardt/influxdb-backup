@@ -6,6 +6,14 @@ Utility tools to backup and restore InfluxDB databases.
 
 `influxdb-restore` writes all series from a file to an InfluxDB.
 
+## Installation
+
+You need a Go development environment. To install to `$GOPATH/bin` do:
+
+```sh
+$ go get github.com/eckardt/influxdb-backup/...
+```
+
 ## Usage
 
 To copy all datapoints (all series) from one database to another do:
