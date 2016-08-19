@@ -11,6 +11,7 @@ import (
 
 type ClientConfig struct {
   *influxdb.ClientConfig
+  Series string
   Destination string
 }
 
@@ -20,11 +21,12 @@ type Client struct {
 }
 
 func parseFlags() (*ClientConfig) {
-  config := &ClientConfig{&influxdb.ClientConfig{}, ""}
+  config := &ClientConfig{&influxdb.ClientConfig{}, "", ""}
   flag.StringVar(&config.Host, "host", "localhost:8086", "host to connect to")
   flag.StringVar(&config.Username, "username", "root", "username to authenticate as")
   flag.StringVar(&config.Password, "password", "root", "password to authenticate with")
   flag.StringVar(&config.Database, "database", "", "database to dump")
+  flag.StringVar(&config.Series, "series", "-", "series to dump")
   flag.StringVar(&config.Destination, "out", "-", "output file (default to stdout)")
   flag.BoolVar(&config.IsSecure, "https", false, "connect via https")
   flag.Parse()
@@ -32,6 +34,9 @@ func parseFlags() (*ClientConfig) {
     fmt.Fprintln(os.Stderr, "flag is mandatory but not provided: -database")
     flag.Usage()
     os.Exit(1)
+  }
+  if config.Series == "" || config.Series == "-"{
+    config.Series = "/.*/"
   }
   return config
 }
@@ -57,7 +62,7 @@ func (self *Client) DumpSeries() {
   } else {
     file = os.Stdout
   }
-  err = self.QueryStream("SELECT * FROM /.*/", file)
+  err = self.QueryStream("SELECT * FROM " + self.Series, file)
   if err != nil {
     log.Fatal(err)
   }

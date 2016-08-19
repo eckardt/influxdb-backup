@@ -11,7 +11,7 @@ Utility tools to backup and restore InfluxDB databases.
 You need a Go development environment. To install to `$GOPATH/bin` do:
 
 ```sh
-$ go get github.com/eckardt/influxdb-backup/...
+$ go get github.com/Abramovic/influxdb-backup/...
 ```
 
 ## Usage
